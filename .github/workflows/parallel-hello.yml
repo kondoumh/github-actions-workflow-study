@@ -1,41 +1,33 @@
-name: Wait Hello World
+name: Parallel Hello World
 
 on:
   workflow_dispatch:
 
 jobs:
-  hello-wait:
+  hello-parallel:
     runs-on: ubuntu-latest
     steps:
-      - name: Background hello 1
-        id: hello1
-        run: |
-          echo "hello1 start: $(date -u +%H:%M:%S)"
-          sleep 4
-          echo "hello1 end:   $(date -u +%H:%M:%S)"
-        background: true
+      - parallel:
+          - name: Parallel hello 1
+            run: |
+              echo "parallel-1 start: $(date -u +%H:%M:%S)"
+              sleep 4
+              echo "parallel-1 end:   $(date -u +%H:%M:%S)"
 
-      - name: Background hello 2
-        id: hello2
-        run: |
-          echo "hello2 start: $(date -u +%H:%M:%S)"
-          sleep 3
-          echo "hello2 end:   $(date -u +%H:%M:%S)"
-        background: true
+          - name: Parallel hello 2
+            run: |
+              echo "parallel-2 start: $(date -u +%H:%M:%S)"
+              sleep 3
+              echo "parallel-2 end:   $(date -u +%H:%M:%S)"
 
-      - name: Background hello 3
-        id: hello3
-        run: |
-          echo "hello3 start: $(date -u +%H:%M:%S)"
-          sleep 2
-          echo "hello3 end:   $(date -u +%H:%M:%S)"
-        background: true
+          - name: Parallel hello 3
+            run: |
+              echo "parallel-3 start: $(date -u +%H:%M:%S)"
+              sleep 2
+              echo "parallel-3 end:   $(date -u +%H:%M:%S)"
 
-      - name: Wait hello1-3
-        wait: [hello1, hello2, hello3]
-
-      - name: Done after all hello steps
+      - name: Done after all parallel steps
         run: |
           echo "done step start: $(date -u +%H:%M:%S)"
-          echo "hello1-3 have completed."
+          echo "All parallel steps have completed."
           echo "done step end:   $(date -u +%H:%M:%S)"
