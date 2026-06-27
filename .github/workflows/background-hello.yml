@@ -1,0 +1,36 @@
+name: Background Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hello-background:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Background hello 1
+        id: hello1
+        run: |
+          echo "hello1 start: $(date -u +%H:%M:%S)"
+          sleep 4
+          echo "hello1 end:   $(date -u +%H:%M:%S)"
+        background: true
+
+      - name: Background hello 2
+        id: hello2
+        run: |
+          echo "hello2 start: $(date -u +%H:%M:%S)"
+          sleep 3
+          echo "hello2 end:   $(date -u +%H:%M:%S)"
+        background: true
+
+      - name: Foreground step (runs while background steps are active)
+        run: |
+          echo "foreground start: $(date -u +%H:%M:%S)"
+          sleep 1
+          echo "foreground end:   $(date -u +%H:%M:%S)"
+
+      - name: Wait for background steps
+        wait: [hello1, hello2]
+
+      - name: Done
+        run: echo "Both background steps have completed."
